@@ -274,7 +274,7 @@ Register a new captain (driver) with vehicle details.
   - Validation failed.
     ```json
     {
-      "error": [
+      "errors": [
         {
           "msg": "Validation error message",
           "param": "field_name",
@@ -283,6 +283,168 @@ Register a new captain (driver) with vehicle details.
       ]
     }
     ```
+  - Or if captain already exists:
+    ```json
+    {
+      "message": "captain already registered"
+    }
+    ```
+
+---
+
+### **POST `/captains/login`**
+
+Authenticate a captain and receive a JWT token.
+
+#### **Request Body**
+
+```json
+{
+  "email": "jane.smith@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### **Field Requirements**
+
+- **email** (string, required): Must be a valid email address.
+- **password** (string, required): At least 6 characters.
+
+#### **Responses**
+
+- **200 OK**
+  - Login successful.
+    ```json
+    {
+      "captain": {
+        "_id": "<captain_id>",
+        "fullname": {
+          "firstname": "Jane",
+          "lastname": "Smith"
+        },
+        "email": "jane.smith@example.com",
+        "vehicle": {
+          "color": "Red",
+          "plate": "ABC123",
+          "capacity": 4,
+          "vehicleType": "car"
+        }
+      },
+      "token": "<jwt_token>"
+    }
+    ```
+- **401 Unauthorized**
+  - Invalid email or password.
+    ```json
+    {
+      "message": "Invalid Email or Password"
+    }
+    ```
+
+---
+
+### **GET `/captains/profile`**
+
+Retrieve the authenticated captain's profile.
+
+#### **Authentication**
+
+- Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+#### **Responses**
+
+- **200 OK**
+  - Returns the captain profile.
+    ```json
+    {
+      "captain": {
+        "_id": "<captain_id>",
+        "fullname": {
+          "firstname": "Jane",
+          "lastname": "Smith"
+        },
+        "email": "jane.smith@example.com",
+        "vehicle": {
+          "color": "Red",
+          "plate": "ABC123",
+          "capacity": 4,
+          "vehicleType": "car"
+        }
+      }
+    }
+    ```
+- **401 Unauthorized**
+  - Missing, invalid, or blacklisted token.
+    ```json
+    {
+      "message": "Unauthorized - token missing"
+    }
+    ```
+    or
+    ```json
+    {
+      "message": "Unauthorized - token blacklisted"
+    }
+    ```
+    or
+    ```json
+    {
+      "message": "Unauthorized - JWT error"
+    }
+    ```
+
+#### **Example Request**
+
+```http
+GET /captains/profile
+Authorization: Bearer <jwt_token>
+```
+
+---
+
+### **GET `/captains/logout`**
+
+Logs out the authenticated captain by blacklisting the current JWT token and clearing the authentication cookie.
+
+#### **Authentication**
+
+- Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+#### **Responses**
+
+- **200 OK**
+  - Logout successful.
+    ```json
+    {
+      "message": "Logout Successfully"
+    }
+    ```
+- **401 Unauthorized**
+  - Missing, invalid, or blacklisted token.
+    ```json
+    {
+      "message": "Unauthorized - token missing"
+    }
+    ```
+    or
+    ```json
+    {
+      "message": "Unauthorized - token blacklisted"
+    }
+    ```
+    or
+    ```json
+    {
+      "message": "Unauthorized - JWT error"
+    }
+    ```
+
+#### **Example Request**
+
+```http
+GET /captains/logout
+Authorization: Bearer <jwt_token>
+```
 
 ---
 
@@ -292,7 +454,4 @@ Register a new captain (driver) with vehicle details.
 - On success, endpoints return user or captain data and/or a JWT token.
 - On error, endpoints return an array of validation errors or an error message.
 - JWT tokens can be sent via the `Authorization` header or as a `token` cookie.
-- The `/users/logout` endpoint blacklists the token, preventing its further use.
-- Captain endpoints may be extended with login and profile routes in the future.
-
----
+- The `/users/logout` and `/captains/logout` endpoints blacklist the token, preventing its further use.
