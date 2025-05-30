@@ -1,16 +1,16 @@
-# /users/register Endpoint Documentation
+# User API Endpoints Documentation
 
-This document describes the `/users/register` endpoint used to register a new user.
+This document describes the available endpoints for user registration, authentication, profile retrieval, and logout in the backend API.
 
-## Endpoint
+---
 
-**POST** `/users/register`
+## **POST `/users/register`**
 
-> Note: If this endpoint is mounted on a route prefix (e.g., `/users`), the full URL would be `/users/register`.
+Register a new user.
 
-## Request Body
+### **Request Body**
 
-The request body must be in JSON format with the following structure:
+Send a JSON object:
 
 ```json
 {
@@ -23,69 +23,56 @@ The request body must be in JSON format with the following structure:
 }
 ```
 
-### Field Requirements
+#### **Field Requirements**
 
 - **fullname** (object, required): Contains the user's first and last name.
-  - **firstname** (string, required): Must be at least 3 characters long. Cannot contain numbers or special characters.
-  - **lastname** (string, required): Must be at least 3 characters long. Cannot contain numbers or special characters.
-- **email** (string, required): Must be a valid email address format (e.g., `user@example.com`). The email must be unique and not already registered.
-- **password** (string, required): Must be at least 6 characters long. Should contain a mix of letters and numbers for better security.
-- **token** (string, response only): A JWT token returned upon successful registration. Used for authenticating subsequent requests.
+  - **firstname** (string, required): At least 3 characters, only letters.
+  - **lastname** (string, required): At least 3 characters, only letters.
+- **email** (string, required): Must be a valid, unique email address.
+- **password** (string, required): At least 6 characters.
 
 **All fields are mandatory. Requests missing any required field or containing invalid data will result in a 400 Bad Request response.**
 
-## Responses
+### **Responses**
 
-### 201 Created
-
-- **Description:** User registered successfully.
-- **Response Body:**
-  ```json
-  {
-    "token": "<jwt_token>",
-    "user": {
-      //User object details (e.g., _id, fullname, email, socketId)
-    }
-  }
-  ```
-
-### 400 Bad Request
-
-- **Description:** The request failed validation. One or more fields are missing or invalid.
-- **Response Body:**
-  ```json
-  {
-    "error": [
-      {
-        "msg": "Validation error message",
-        "param": "field_name",
-        "location": "body"
+- **201 Created**
+  - User registered successfully.
+  - Example:
+    ```json
+    {
+      "token": "<jwt_token>",
+      "user": {
+        "_id": "<user_id>",
+        "fullname": {
+          "firstname": "John",
+          "lastname": "Doe"
+        },
+        "email": "john.doe@example.com",
+        "socketId": null
       }
-    ]
-  }
-  ```
+    }
+    ```
+- **400 Bad Request**
+  - Validation failed.
+    ```json
+    {
+      "error": [
+        {
+          "msg": "Validation error message",
+          "param": "field_name",
+          "location": "body"
+        }
+      ]
+    }
+    ```
 
-## Example Request
+---
 
-```http
-POST /users/register
-Content-Type: application/json
+## **POST `/users/login`**
 
-{
-  "fullname": {
-    "firstname": "Jane",
-    "lastname": "Doe"
-  },
-  "email": "jane.doe@example.com",
-  "password": "securePassword123"
-}
-```
+Authenticate a user and receive a JWT token.
 
-## POST `/users/login`
-
-Authenticates a user and returns a JWT token.
-
-### Request Body
+### **Request Body**
 
 ```json
 {
@@ -94,12 +81,12 @@ Authenticates a user and returns a JWT token.
 }
 ```
 
-#### Field Requirements
+#### **Field Requirements**
 
-- `email` (string, required): Must be a valid email address.
-- `password` (string, required): At least 6 characters.
+- **email** (string, required): Must be a valid email address.
+- **password** (string, required): At least 6 characters.
 
-### Responses
+### **Responses**
 
 - **200 OK**
   - Login successful.
@@ -140,17 +127,93 @@ Authenticates a user and returns a JWT token.
 
 ---
 
-### Notes
+## **GET `/users/profile`**
 
-- All fields are required.
-- On success, a JWT token is returned for authentication.
-- On error, an array of validation errors is returned.
+Retrieve the authenticated user's profile.
 
-## Additional Notes
+### **Authentication**
 
-- The endpoint validates:
-  - Email format.
-  - Minimum length for `fullname.firstname` and `fullname.lastname`.
-  - Minimum length for `password`.
-- On success, a JWT token is generated and returned in the response along with the user object.
-- The error response contains an array of validation error details provided by `express-validator`.
+- Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### **Responses**
+
+- **200 OK**
+  - Returns the user profile.
+    ```json
+    {
+      "_id": "<user_id>",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "socketId": null
+    }
+    ```
+- **401 Unauthorized**
+  - Missing or invalid token.
+    ```json
+    {
+      "message": "Authentication required"
+    }
+    ```
+
+#### **Example Request**
+
+```http
+GET /users/profile
+Authorization: Bearer <jwt_token>
+```
+
+---
+
+## **GET `/users/logout`**
+
+Logs out the authenticated user by blacklisting the current JWT token and clearing the authentication cookie.
+
+### **Authentication**
+
+- Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### **Responses**
+
+- **200 OK**
+  - Logout successful.
+    ```json
+    {
+      "message": "Logged out successfully"
+    }
+    ```
+- **400 Bad Request**
+  - Token not found in request.
+    ```json
+    {
+      "message": "Token not found"
+    }
+    ```
+- **500 Internal Server Error**
+  - Server error during logout.
+    ```json
+    {
+      "message": "Server error during logout"
+    }
+    ```
+
+#### **Example Request**
+
+```http
+GET /users/logout
+Authorization: Bearer <jwt_token>
+```
+
+---
+
+## **General Notes**
+
+- All endpoints requiring authentication expect a valid JWT token.
+- On success, endpoints return user data and/or a JWT token.
+- On error, endpoints return an array of validation errors or an error message.
+- JWT tokens can be sent via the `Authorization` header or as a `token` cookie.
+- The `/users/logout` endpoint blacklists the token, preventing its further use.
+
+---
