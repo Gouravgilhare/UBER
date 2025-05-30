@@ -1,16 +1,16 @@
-# User API Endpoints Documentation
+# User & Captain API Endpoints Documentation
 
-This document describes the available endpoints for user registration, authentication, profile retrieval, and logout in the backend API.
+This document describes the available endpoints for user and captain registration, authentication, profile retrieval, and logout in the backend API.
 
 ---
 
-## **POST `/users/register`**
+## **User Endpoints**
+
+### **POST `/users/register`**
 
 Register a new user.
 
-### **Request Body**
-
-Send a JSON object:
+#### **Request Body**
 
 ```json
 {
@@ -33,11 +33,10 @@ Send a JSON object:
 
 **All fields are mandatory. Requests missing any required field or containing invalid data will result in a 400 Bad Request response.**
 
-### **Responses**
+#### **Responses**
 
 - **201 Created**
   - User registered successfully.
-  - Example:
     ```json
     {
       "token": "<jwt_token>",
@@ -68,11 +67,11 @@ Send a JSON object:
 
 ---
 
-## **POST `/users/login`**
+### **POST `/users/login`**
 
 Authenticate a user and receive a JWT token.
 
-### **Request Body**
+#### **Request Body**
 
 ```json
 {
@@ -86,7 +85,7 @@ Authenticate a user and receive a JWT token.
 - **email** (string, required): Must be a valid email address.
 - **password** (string, required): At least 6 characters.
 
-### **Responses**
+#### **Responses**
 
 - **200 OK**
   - Login successful.
@@ -127,15 +126,15 @@ Authenticate a user and receive a JWT token.
 
 ---
 
-## **GET `/users/profile`**
+### **GET `/users/profile`**
 
 Retrieve the authenticated user's profile.
 
-### **Authentication**
+#### **Authentication**
 
 - Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
 
-### **Responses**
+#### **Responses**
 
 - **200 OK**
   - Returns the user profile.
@@ -167,15 +166,15 @@ Authorization: Bearer <jwt_token>
 
 ---
 
-## **GET `/users/logout`**
+### **GET `/users/logout`**
 
 Logs out the authenticated user by blacklisting the current JWT token and clearing the authentication cookie.
 
-### **Authentication**
+#### **Authentication**
 
 - Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
 
-### **Responses**
+#### **Responses**
 
 - **200 OK**
   - Logout successful.
@@ -208,12 +207,92 @@ Authorization: Bearer <jwt_token>
 
 ---
 
+## **Captain Endpoints**
+
+### **POST `/captains/register`**
+
+Register a new captain (driver) with vehicle details.
+
+#### **Request Body**
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Smith"
+  },
+  "email": "jane.smith@example.com",
+  "password": "yourpassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### **Field Requirements**
+
+- **fullname** (object, required): Captain's first and last name.
+  - **firstname** (string, required): At least 3 characters.
+  - **lastname** (string, required): At least 3 characters.
+- **email** (string, required): Must be a valid, unique email address.
+- **password** (string, required): At least 6 characters.
+- **vehicle** (object, required): Vehicle details.
+  - **color** (string, required): At least 3 characters.
+  - **plate** (string, required): At least 3 characters.
+  - **capacity** (integer, required): At least 1.
+  - **vehicleType** (string, required): Must be one of `"car"`, `"motorcycle"`, or `"auto"`.
+
+**All fields are mandatory. Requests missing any required field or containing invalid data will result in a 400 Bad Request response.**
+
+#### **Responses**
+
+- **201 Created**
+  - Captain registered successfully.
+    ```json
+    {
+      "token": "<jwt_token>",
+      "captain": {
+        "_id": "<captain_id>",
+        "fullname": {
+          "firstname": "Jane",
+          "lastname": "Smith"
+        },
+        "email": "jane.smith@example.com",
+        "vehicle": {
+          "color": "Red",
+          "plate": "ABC123",
+          "capacity": 4,
+          "vehicleType": "car"
+        }
+      }
+    }
+    ```
+- **400 Bad Request**
+  - Validation failed.
+    ```json
+    {
+      "error": [
+        {
+          "msg": "Validation error message",
+          "param": "field_name",
+          "location": "body"
+        }
+      ]
+    }
+    ```
+
+---
+
 ## **General Notes**
 
 - All endpoints requiring authentication expect a valid JWT token.
-- On success, endpoints return user data and/or a JWT token.
+- On success, endpoints return user or captain data and/or a JWT token.
 - On error, endpoints return an array of validation errors or an error message.
 - JWT tokens can be sent via the `Authorization` header or as a `token` cookie.
 - The `/users/logout` endpoint blacklists the token, preventing its further use.
+- Captain endpoints may be extended with login and profile routes in the future.
 
 ---
