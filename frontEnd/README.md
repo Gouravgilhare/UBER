@@ -88,6 +88,117 @@ All routes are defined in [`src/App.jsx`](src/App.jsx):
 - Update the API endpoints in your service calls as needed to match your backend routes.
 - The forms currently log data to the console; you should connect them to your backend API for full functionality.
 
-## License
+## Component & Context Documentation
 
-MIT
+### `src/context/UserContext.jsx`
+
+**UserContext** provides a global context for user data (email and fullname) across the app.
+
+- **Exports:**
+  - `UserDataContext` — The React context object.
+  - `UserContext` — The context provider component.
+
+**Usage:**
+
+- Wraps the app in `main.jsx` to provide `[user, setUser]` via context.
+- Any component can access or update the user state using `useContext(UserDataContext)`.
+
+**Default user state:**
+
+```js
+{
+  email: "",
+  fullname: {
+    firstname: "",
+    lastname: ""
+  }
+}
+```
+
+---
+
+### `src/pages/UserSignup.jsx`
+
+**UserSignup** is the registration form for users.
+
+- Collects: First name, last name, email, password.
+- On submit:
+  - Builds a user object:
+    ```js
+    {
+      fullname: { firstname, lastname },
+      email,
+      password
+    }
+    ```
+  - Logs the user object to the console.
+  - Clears the form fields.
+- Navigation:
+  - Link to `/login` for existing users.
+
+---
+
+### `src/pages/UserLogin.jsx`
+
+**UserLogin** is the login form for users.
+
+- Collects: Email, password.
+- On submit:
+  - Builds a login object:
+    ```js
+    {
+      email, password;
+    }
+    ```
+  - Logs the login object to the console.
+  - Clears the form fields.
+- Navigation:
+  - Link to `/signup` for new users.
+  - Link to `/captain-login` to login as a captain.
+
+---
+
+### `src/pages/CaptainSignup.jsx`
+
+**CaptainSignup** is the registration form for captains (drivers).
+
+- Collects: First name, last name, email, password.
+- On submit:
+  - Builds a captain object:
+    ```js
+    {
+      fullname: { firstname, lastname },
+      email,
+      password
+    }
+    ```
+  - Logs the captain object to the console.
+  - Clears the form fields.
+- Navigation:
+  - Link to `/captain-login` for existing captains.
+
+---
+
+### `src/pages/CaptainLogin.jsx`
+
+**CaptainLogin** is the login form for captains (drivers).
+
+- Collects: Email, password.
+- On submit:
+  - Builds a login object:
+    ```js
+    {
+      email, password;
+    }
+    ```
+  - Logs the login object to the console.
+  - Clears the form fields.
+- Navigation:
+  - Link to `/captain-signup` for new captains.
+  - Link to `/login` to login as a user.
+
+---
+
+> **Note:**  
+> All forms currently only log data to the console.  
+> To enable real authentication, connect these forms to your backend API endpoints.
