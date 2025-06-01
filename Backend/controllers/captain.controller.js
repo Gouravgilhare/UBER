@@ -22,7 +22,7 @@ module.exports.registerCaptain = async (req, res, next) => {
       firstname: fullname.firstname,
       lastname: fullname.lastname,
     },
-    email,
+    email: email,
     password: hashPassword,
     color: vehicle.color,
     plate: vehicle.plate,
@@ -37,7 +37,7 @@ module.exports.registerCaptain = async (req, res, next) => {
 
 module.exports.loginCaptain = async (req, res, next) => {
   const errors = validationResult(req);
-
+  const { email, password } = req.body;
   if (!errors.isEmpty()) {
     return res.status(401).json({ message: "Invalid Email or Password" });
   }
