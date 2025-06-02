@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import UserProtectWrapper from "./pages/UserProtectedWrapper.jsx";
 import UserLogout from "./pages/UserLogout.jsx";
 import CaptainHome from "./pages/CaptainHome.jsx";
+import CaptainProtectWrapper from "./pages/CaptainProtectedWrapper.jsx";
 const App = () => {
   // const ans = useContext(UserDataContext);
   return (
@@ -37,7 +38,15 @@ const App = () => {
               </UserProtectWrapper>
             }
           ></Route>
-          <Route path="/captain-home" element={<CaptainHome />}></Route>
+
+          <Route
+            path="/captain-home"
+            element={
+              <CaptainProtectWrapper>
+                <CaptainHome />
+              </CaptainProtectWrapper>
+            }
+          ></Route>
         </Routes>
       </div>
     </>

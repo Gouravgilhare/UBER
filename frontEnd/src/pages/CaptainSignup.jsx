@@ -177,7 +177,7 @@ const CaptainSignup = () => {
             className="bg-[#111] text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-base placeholder:text-base"
             type="submit"
           >
-            SignUp
+            Create Captain Account
           </button>
         </form>
         <p className="text-center">

@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext";
 import axios from "axios";
-import { UserDataContext } from "../context/UserContext";
-const UserProtectWrapper = ({ children }) => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); // optional for loading fallback
-  const { setUser } = useContext(UserDataContext); // optional for loading fallback
-  const token = localStorage.getItem("token");
+const CaptainProtectWrapper = ({ children }) => {
 
+
+  const navigate = useNavigate();
+  const { setCaptain } = useContext(CaptainDataContext); // optional for loading fallback
+  const [isLoading, setIsLoading] = useState(true); // optional for loading fallback
+  const token = localStorage.getItem("token");
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -15,33 +16,37 @@ const UserProtectWrapper = ({ children }) => {
     }
 
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/user/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `${import.meta.env.VITE_BASE_URL}/captain/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         if (response.status === 200) {
           const data = response.data;
-          setUser(data.user);
+          setCaptain(data.captain);
           setIsLoading(false);
         }
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.removeItem("token");
-          navigate("/login");
+          navigate("/captain-login");
         } else {
           console.error("ERROR : ", err);
         }
       });
-  }, [navigate, token, setUser]);
+  }, [navigate, token, setCaptain]);
 
   if (isLoading) {
     return <div>Loading...</div>; // Or null
   }
 
+
   return <>{children}</>;
 };
 
-export default UserProtectWrapper;
+export default CaptainProtectWrapper;
