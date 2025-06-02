@@ -10,7 +10,7 @@ const Home = () => {
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
 
-  const submitHandCloseler = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
   };
 
