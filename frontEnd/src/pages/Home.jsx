@@ -3,13 +3,19 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import LocationSearchPanel from "../components/LocationSearchPanel";
 import "remixicon/fonts/remixicon.css";
+import VehiclePanel from "../components/VehiclePanel";
+import ConfirmRide from "../components/ConfirmRide";
+
 const Home = () => {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [confirmRidePanel, setConfirmRidePanel] = useState(false);
   const panelRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
   const panelCloseRef = useRef(null);
-
+  const confrimRideRef = useRef(null);
   const submitHandler = (e) => {
     e.preventDefault();
   };
@@ -27,6 +33,34 @@ const Home = () => {
     [panelOpen]
   );
 
+  useGSAP(
+    function () {
+      if (vehiclePanel) {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [vehiclePanel]
+  );
+  useGSAP(
+    function () {
+      if (confirmRidePanel) {
+        gsap.to(confrimRideRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(confrimRideRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [confirmRidePanel]
+  );
   return (
     <>
       <div className="h-screen absolute overflow-hidden">
@@ -71,7 +105,7 @@ const Home = () => {
                 onChange={(e) => {
                   setPickup(e.target.value);
                 }}
-                className=" bg-[#eee] px-8 w-full text-base   mt-5 py-2 text-sm rounded-lg"
+                className=" bg-[#eee] px-8 w-full text-base   mt-5 py-2  rounded-lg"
                 type="text"
                 placeholder="Add a Pick-up Location  "
               />
@@ -83,69 +117,34 @@ const Home = () => {
                 onChange={(e) => {
                   setDestination(e.target.value);
                 }}
-                className=" bg-[#eee] px-8 w-full  text-base  mt-3 py-2 text-sm rounded-lg"
+                className=" bg-[#eee] px-8 w-full  text-base  mt-3 py-2  rounded-lg"
                 type="text"
                 placeholder="Enter your destination  "
               />
             </form>
           </div>
           <div ref={panelRef} className=" bg-white  h-0 ">
-            <LocationSearchPanel />
+            <LocationSearchPanel
+              setPanelOpen={setPanelOpen}
+              setVehiclePanel={setVehiclePanel}
+            />
           </div>
         </div>
 
-        <div className="fixed w-full  z-10 p-2 bg-white bottom-0">
-          <h3 className="text-2xl font-semibold p-4 ">Choose a Vehicle</h3>
-          <div className="flex w-full p-3 py-6 border-2 border-gray-100 active:border-black mb-2 bg-gray-100   rounded-xl items-center justify-between">
-            <img className=" h-12" src="/images/car.png" alt="car" />
-            <div className="  w-1/2">
-              <h4 className="font-medium text-base">
-                UberGO{" "}
-                <span>
-                  {" "}
-                  <i className="ri-user-3-fill "></i>
-                </span>
-                4
-              </h4>
-              <h5 className="font-medium text-base">2 Mins away</h5>
-              <p className="font-normal text-xs">Affordable, compact rides</p>
-            </div>
-            <h2 className="text-lg font-semibold">₹195.50</h2>
-          </div>
-          <div className="flex w-full p-3 py-6 border-2 mb-2 bg-gray-100 border-gray-100 active:border-black  rounded-xl items-center justify-between">
-            <img className=" h-12" src="/images/auto.png" alt="car" />
-            <div className="  w-1/2">
-              <h4 className="font-medium text-base">
-                UberAuto{" "}
-                <span>
-                  {" "}
-                  <i className="ri-user-3-fill "></i>
-                </span>
-                3
-              </h4>
-              <h5 className="font-medium text-base">3 Mins away</h5>
-              <p className="font-normal text-xs">Affordable, auto rides</p>
-            </div>
-            <h2 className="text-lg font-semibold">₹118.50</h2>
-          </div>
-          <div className="flex w-full p-3 py-6 border-2 mb-2 bg-gray-100 border-gray-100 active:border-black  rounded-xl items-center justify-between">
-            <img className=" h-12" src="/images/bike.png" alt="car" />
-            <div className="  w-1/2">
-              <h4 className="font-medium text-base">
-                Moto{" "}
-                <span>
-                  {" "}
-                  <i className="ri-user-3-fill "></i>
-                </span>
-                1
-              </h4>
-              <h5 className="font-medium text-base">2 Mins away</h5>
-              <p className="font-normal text-xs">
-                Affordable, motorcycle rides
-              </p>
-            </div>
-            <h2 className="text-lg font-semibold">₹65</h2>
-          </div>
+        <div
+          ref={vehiclePanelRef}
+          className="fixed w-full  z-10 px-3 py-10 translate-y-full  bg-white bottom-0"
+        >
+          <VehiclePanel
+            setConfirmRidePanel={setConfirmRidePanel}
+            setVehiclePanel={setVehiclePanel}
+          />
+        </div>
+        <div
+          ref={confrimRideRef}
+          className="fixed w-full  z-10 px-3 py-6 translate-y-full  bg-white bottom-0"
+        >
+          <ConfirmRide setVehiclePanel={setVehiclePanel} />
         </div>
       </div>
     </>
