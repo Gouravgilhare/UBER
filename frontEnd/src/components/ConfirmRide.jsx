@@ -5,17 +5,17 @@ const ConfirmRide = (props) => {
     <div>
       {" "}
       <h5
-        className="p-3 text-center w-[93%] absolute text-3xl text-gray-300 pt-5 top-0 "
+        className="p-3 text-center w-[93%] absolute text-3xl text-gray-300 pt-5 mb-5 top-0 "
         onClick={() => {
           props.setVehiclePanel(false);
         }}
       >
-        <i className="ri-arrow-down-wide-line"></i>
+        <i className="ri-arrow-down-wide-line  "></i>
       </h5>
       <h3 className="text-2xl font-semibold p-4 ">Confirm Your Ride</h3>
       <div className="flex gap-2 justify-between items-center flex-col ">
         <img className=" h-20" src="/images/car.png" alt="car" />
-        <div className="w-full mt-5">
+        <div className="w-full mt-2">
           <div className="flex items-center gap-5  p-3 border-gray-300 border-b-2">
             <i className=" text-3xl  ri-map-pin-2-fill"></i>
             <div>
