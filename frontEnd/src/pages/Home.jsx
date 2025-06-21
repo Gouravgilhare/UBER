@@ -6,6 +6,7 @@ import "remixicon/fonts/remixicon.css";
 import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
+import WaitingForDriver from "../components/WaitingForDriver";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -14,11 +15,13 @@ const Home = () => {
   const [vehiclePanel, setVehiclePanel] = useState(false);
   const [confirmRidePanel, setConfirmRidePanel] = useState(false);
   const [vehicleFound, setVehicleFound] = useState(false);
+  const [waitingForDriver, setWaitingForDriver] = useState(false);
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
   const vehicleFoundRef = useRef(null);
   const panelCloseRef = useRef(null);
   const confrimRideRef = useRef(null);
+  const waitingForDriverRef = useRef(null);
   const submitHandler = (e) => {
     e.preventDefault();
   };
@@ -72,6 +75,20 @@ const Home = () => {
         });
       } else {
         gsap.to(vehicleFoundRef.current, {
+          transform: "translateY(100%)",
+        });
+      }
+    },
+    [vehicleFound]
+  );
+  useGSAP(
+    function () {
+      if (waitingForDriver) {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(0)",
+        });
+      } else {
+        gsap.to(waitingForDriverRef.current, {
           transform: "translateY(100%)",
         });
       }
@@ -170,7 +187,13 @@ const Home = () => {
           ref={vehicleFoundRef}
           className="fixed w-full  z-10 px-3 py-6 translate-y-full  bg-white bottom-0"
         >
-          <LookingForDriver    setVehicleFound={setVehicleFound}/>
+          <LookingForDriver setVehicleFound={setVehicleFound} />
+        </div>
+        <div
+          ref={waitingForDriverRef}
+          className="fixed w-full  z-10 px-3 py-6  translate-y-full bg-white bottom-0"
+        >
+          <WaitingForDriver waitingForDriver={waitingForDriver} />
         </div>
       </div>
     </>

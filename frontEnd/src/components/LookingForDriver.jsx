@@ -2,7 +2,7 @@ import React from "react";
 
 const LookingForDriver = (props) => {
   return (
-      <div>
+      <div className="mb-0">
       {" "}
      
         <h5
