@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
 const ConfirmRidePopUp = (props) => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
+  const [otp, setOtp] = useState(false);
 
-   
   return (
     <div className=" h-screen pb-6 ">
       <div>
@@ -71,6 +73,10 @@ const ConfirmRidePopUp = (props) => {
             >
               <input
                 type="text"
+                value={otp}
+                onChange={(e) => {
+                  setOtp(e.target.value);
+                }}
                 className="bg-[#eee] px-3 border-1 py-4 text-lg font-mono rounded-lg w-full mt-3"
                 placeholder="Enter OTP"
               />

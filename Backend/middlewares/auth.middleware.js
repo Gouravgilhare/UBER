@@ -5,26 +5,36 @@ const jwt = require("jsonwebtoken");
 const blacklistTokenModel = require("../models/blacklistToken.model");
 
 module.exports.authUser = async (req, res, next) => {
-  const token = req.cookies?.token || req.headers.authorization?.split(" ")[1];
+  // Safely extract token from cookie or Authorization header
+  const cookieToken = req.cookies?.token;
+  const authHeader = req.headers.authorization;
+  const headerToken =
+    authHeader && authHeader.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : null;
+  const token = cookieToken || headerToken;
+
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized1" });
   }
 
-  const isBlacklisted = await userModel.findOne({ token: token });
-
+  // Check blacklist in the correct collection!
+  const isBlacklisted = await blacklistTokenModel.findOne({ token });
   if (isBlacklisted) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized2" });
   }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await userModel.findById(decoded._id);
-
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     req.user = user;
-
     return next();
   } catch (err) {
     console.error("Auth middleware error:", err);
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized3" });
   }
 };
 
