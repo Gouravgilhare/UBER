@@ -16,7 +16,7 @@ const VehiclePanel = (props) => {
         <div
           onClick={() => {
             props.setConfirmRidePanel(true);
-            props.setVehiclePanel(false);
+            props.setVehicleType('car');
           }}
           className="flex w-full p-3 py-6 border-2 border-gray-100 active:border-black mb-2 bg-gray-100   rounded-xl items-center justify-between"
         >
@@ -33,12 +33,12 @@ const VehiclePanel = (props) => {
             <h5 className="font-medium text-base">2 Mins away</h5>
             <p className="font-normal text-xs">Affordable, compact rides</p>
           </div>
-          <h2 className="text-lg font-semibold">₹195.50</h2>
+          <h2 className="text-lg font-semibold">₹{props.fare.car}</h2>
         </div>
         <div
           onClick={() => {
             props.setConfirmRidePanel(true);
-            props.setVehiclePanel(false);
+           props.setVehicleType('auto');
           }}
           className="flex w-full p-3 py-6 border-2 mb-2 bg-gray-100 border-gray-100 active:border-black  rounded-xl items-center justify-between"
         >
@@ -55,12 +55,12 @@ const VehiclePanel = (props) => {
             <h5 className="font-medium text-base">3 Mins away</h5>
             <p className="font-normal text-xs">Affordable, auto rides</p>
           </div>
-          <h2 className="text-lg font-semibold">₹118.50</h2>
+          <h2 className="text-lg font-semibold">₹{props.fare.auto}</h2>
         </div>
         <div
           onClick={() => {
             props.setConfirmRidePanel(true);
-            props.setVehiclePanel(false);
+           props.setVehicleType('motorcycle');
           }}
           className="flex w-full p-3 py-6 border-2 mb-2 bg-gray-100 border-gray-100 active:border-black  rounded-xl items-center justify-between"
         >
@@ -77,7 +77,7 @@ const VehiclePanel = (props) => {
             <h5 className="font-medium text-base">2 Mins away</h5>
             <p className="font-normal text-xs">Affordable, motorcycle rides</p>
           </div>
-          <h2 className="text-lg font-semibold">₹65</h2>
+          <h2 className="text-lg font-semibold">₹{props.fare.motorcycle }</h2>
         </div>
       </div>
     </div>

@@ -448,6 +448,66 @@ Authorization: Bearer <jwt_token>
 
 ---
 
+## **Ride Endpoints**
+
+### **GET `/rides/get-fare`**
+
+Calculate the estimated fare for a ride between two locations.
+
+#### **Query Parameters**
+
+```json
+{
+  "pickup": "Origin address as string",
+  "destination": "Destination address as string"
+}
+```
+
+#### **Authentication**
+
+- Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+#### **Responses**
+
+- **200 OK**
+  - Returns the estimated fare for each vehicle type.
+    ```json
+    {
+      "auto": 123.45,
+      "car": 234.56,
+      "motorcycle": 98.76
+    }
+    ```
+- **400 Bad Request**
+  - Validation failed.
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "Invalid Pickup Address",
+          "param": "pickup",
+          "location": "query"
+        }
+      ]
+    }
+    ```
+- **500 Internal Server Error**
+  - Server error during fare calculation.
+    ```json
+    {
+      "message": "Error message"
+    }
+    ```
+
+#### **Example Request**
+
+```http
+GET /rides/get-fare?pickup=Origin%20Address&destination=Destination%20Address
+Authorization: Bearer <jwt_token>
+```
+
+---
+
 ## **General Notes**
 
 - All endpoints requiring authentication expect a valid JWT token.

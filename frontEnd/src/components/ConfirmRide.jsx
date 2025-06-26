@@ -51,6 +51,7 @@ const ConfirmRide = (props) => {
             onClick={() => {
               props.setVehicleFound(true);
               props.setConfirmRidePanel(false);
+              props.createRide()
             }}
             className=""
           >

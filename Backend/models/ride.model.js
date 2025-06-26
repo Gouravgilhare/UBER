@@ -50,3 +50,7 @@ const rideSchema = new mongoose.Schema({
   },
 });
 module.exports = mongoose.model("ride", rideSchema);
+
+module.exports.getFare =async (req,res)=>{
+  
+}

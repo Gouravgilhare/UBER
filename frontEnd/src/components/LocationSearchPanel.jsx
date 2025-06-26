@@ -1,21 +1,27 @@
 import React from "react";
 
-const LocationSearchPanel = (props) => {
-  const locations = [
-    "742 Evergreen Terrace Springfield, USA ZIP: 62704",
-    "10 Downing Street Westminster, London, UK Postal Code: SW1A 2AA",
-    "1600 Pennsylvania Avenue NW Washington, D.C., USA ZIP: 20500",
-    "1-1 Chiyoda Chiyoda City, Tokyo, Japan Postal Code: 100-8111",
-    " 221B Baker Street London, UK Postal Code: NW1 6XE",
-  ];
+const LocationSearchPanel = ({
+  sugestions,
+  // setVehiclePanel,
+  // setPanelOpen,
+  setPickup,
+  setDestination,
+  activeField,
+}) => {
+  const handleSuggestionClick = (sugestion) => {
+    if (activeField === "pickup") {
+      setPickup(sugestion);
+    } else if (activeField === "destination") {
+      setDestination(sugestion);
+    }
+  };
   return (
     <div>
-      {locations.map(function (element, index) {
+      {sugestions.map(function (element, index) {
         return (
           <div
             onClick={() => {
-              props.setVehiclePanel(true);
-              props.setPanelOpen(false);
+              handleSuggestionClick(element);
             }}
             key={index}
             className="flex gap-4 items-center my-2 active:border-black border-2  p-3 border-gray-200  rounded-xl justify-start"
