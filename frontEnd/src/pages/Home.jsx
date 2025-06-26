@@ -14,8 +14,8 @@ const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false);
   const [vehiclePanel, setVehiclePanel] = useState(false);
   const [confirmRidePanel, setConfirmRidePanel] = useState(false);
-  const [pickupSuggestions, setPickupSuggestions] = useState([]);
-  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+  const [setPickupSuggestions] = useState([]);
+  const [setDestinationSuggestions] = useState([]);
   const [vehicleFound, setVehicleFound] = useState(false);
   const [waitingForDriver, setWaitingForDriver] = useState(false);
   const [fare, setFare] = useState({});
@@ -204,7 +204,7 @@ const Home = () => {
               <input
                 onClick={() => {
                   setPanelOpen(true);
-                  setActiveField("pickup");
+                  // setActiveField(" pickup");
                 }}
                 value={pickup}
                 onChange={handlePickupChange}
@@ -214,7 +214,7 @@ const Home = () => {
               />
               <input
                 onClick={() => {
-                  setActiveField("destination");
+                  // setActiveField("destination");
                   setPanelOpen(true);
                 }}
                 value={destination}
@@ -233,15 +233,15 @@ const Home = () => {
           </div>
           <div ref={panelRef} className=" bg-white  h-0 ">
             <LocationSearchPanel
-              suggestions={
-                activeField === "pickup"
-                  ? pickupSuggestions
-                  : destinationSuggestions
-              }
+              // suggestions={
+              // activeField === "pickup"
+              //   ? pickupSuggestions
+              //   : destinationSuggestions
+              // }
               setPickup={setPickup}
               setDestination={setDestination}
               setPanelOpen={setPanelOpen}
-              setActiveField={activeField}
+              // setActiveField={activeField}
               setVehiclePanel={setVehiclePanel}
             />
           </div>
@@ -266,15 +266,21 @@ const Home = () => {
             pickup={pickup}
             destination={destination}
             createRide={createRide}
-            setConfirmRidePanel={setConfirmRidePanel}
             setVehicleFound={setVehicleFound}
+            setConfirmRidePanel={setConfirmRidePanel}
           />
         </div>
         <div
           ref={vehicleFoundRef}
           className="fixed w-full  z-10 px-3 py-6 translate-y-full  bg-white bottom-0"
         >
-          <LookingForDriver setVehicleFound={setVehicleFound} />
+          <LookingForDriver
+            pickup={pickup}
+            destination={destination}
+            createRide={createRide}
+            setVehicleFound={setVehicleFound}
+            // setVehicleFound={setVehicleFound}
+          />
         </div>
         <div
           ref={waitingForDriverRef}
